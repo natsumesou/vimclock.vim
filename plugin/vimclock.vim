@@ -1,3 +1,6 @@
+" Name: vimclock.vim
+" Author: @natsumesou
+
 function! s:init()
     let bufname='[vimclock]'
     edit! `=bufname`
@@ -6,11 +9,11 @@ function! s:init()
     let s:h = winheight('%')
 
     let s:num = {}
-    let s:line      = repeat(" ", s:w/8 - s:w/9)." ".repeat('#', s:w/4-s:w/12)." ".repeat(" ", s:w/8 - s:w/9)
-    let s:noLine    = repeat(" ", s:w/8 - s:w/9)." ".repeat(' ', s:w/4-s:w/12)." ".repeat(" ", s:w/8 - s:w/9)
-    let s:rightLine = repeat(" ", s:w/8 - s:w/9)." ".repeat(' ', s:w/4-s:w/12)."#".repeat(" ", s:w/8 - s:w/9)
-    let s:leftLine  = repeat(" ", s:w/8 - s:w/9)."#".repeat(' ', s:w/4-s:w/12)." ".repeat(" ", s:w/8 - s:w/9)
-    let s:middle    = repeat(" ", s:w/8 - s:w/9)."#".repeat(' ', s:w/4-s:w/12)."#".repeat(" ", s:w/8 - s:w/9)
+    let s:line      = repeat(' ', s:w/12-s:w/13)." ".repeat('#', s:w/5)." ".repeat(' ', s:w/12-s:w/13)
+    let s:noLine    = repeat(' ', s:w/12-s:w/13)." ".repeat(' ', s:w/5)." ".repeat(' ', s:w/12-s:w/13)
+    let s:rightLine = repeat(' ', s:w/12-s:w/13)." ".repeat(' ', s:w/5)."#".repeat(' ', s:w/12-s:w/13)
+    let s:leftLine  = repeat(' ', s:w/12-s:w/13)."#".repeat(' ', s:w/5)." ".repeat(' ', s:w/12-s:w/13)
+    let s:middle    = repeat(' ', s:w/12-s:w/13)."#".repeat(' ', s:w/5)."#".repeat(' ', s:w/12-s:w/13)
 endfunction
 
 function! s:createNumberString()
@@ -66,13 +69,13 @@ function! s:createNumberString()
     let s:colon = {}
     let span = (s:h - 2) / 10
     for i in range(s:h - 2)
-        let s:colon[i] = repeat(" ", s:w/12 - s:w/13)
+        let s:colon[i] = repeat(" ", s:w/8-s:w/9 ? 1 : 0)
         if (i > span*3 && i <= span*3+2) || ( i > span*6 && i <= span*6+2)
             let s:colon[i] = s:colon[i].repeat("#", s:w/8-s:w/9)
         else
             let s:colon[i] = s:colon[i].repeat(" ", s:w/8-s:w/9)
         endif
-        let s:colon[i] = s:colon[i].repeat(" ", s:w/12 - s:w/13)
+        let s:colon[i] = s:colon[i].repeat(" ", s:w/8-s:w/9 ? 1 : 0)
     endfor
 endfunction
 
@@ -98,12 +101,14 @@ function s:drawClock()
             endfor
             let beforeMinutes = minutes
         endif
-        if flash
-            call setline(1, seconds)
-            let flash = 0
-        else
-            call setline(1, ' ')
-            let flash = 1
+        if s:showFlash
+            if flash
+                call setline(1, seconds)
+                let flash = 0
+            else
+                call setline(1, ' ')
+                let flash = 1
+            endif
         endif
         setl nomodifiable
         setl nomodified
@@ -114,7 +119,13 @@ function s:drawClock()
 endfunction
 
 
-function s:clock()
+function s:clock(...)
+    let show = 1
+    if a:0 >= 1
+        let show = a:1 ? 1 : 0
+    endif
+
+    let s:showFlash = show
     call s:init()
     call s:createNumberString()
     call s:drawClock()
