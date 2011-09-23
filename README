@@ -1,5 +1,4 @@
 :Clock
 start vimclock
 
- * not work on windows
- * can't modified draw in too min buffer window
+ * can't modified draw on too min buffer window

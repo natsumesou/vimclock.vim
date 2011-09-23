@@ -91,8 +91,6 @@ function s:drawClock()
         let minutesLeft = minutes[0]
         let minutesRight = minutes[1]
         let seconds = strftime("%S")
-        let secondsLeft = seconds[0]
-        let secondsRight = seconds[1]
 
         setl modifiable
         if beforeMinutes != minutes
