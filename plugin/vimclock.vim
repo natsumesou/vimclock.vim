@@ -5,6 +5,7 @@ function! s:init()
     let bufname='[vimclock]'
     edit! `=bufname`
     setl bufhidden=delete
+    setl nonumber
     let s:w = winwidth('%')
     let s:h = winheight('%')
 
